@@ -4,7 +4,6 @@ Created on Mon Aug 23 11:29:20 2021
 
 @author: wkxxx
 """
-
 import os
 import pandas as pd
 import numpy as np
@@ -15,7 +14,6 @@ path = "."
 
 filename_read = os.path.join(path, "Life Expectancy Data.csv")
 df = pd.read_csv(filename_read, na_values=['NA', '?'])
-
 
 # First data frame
 df1 = df.select_dtypes(include=['int', 'float'])
@@ -36,8 +34,10 @@ for field in headers:
 #print(df['Life expectancy '])    
 for field in fields:
     print(field)
-    #dropping values gives much more promising results in terms of probability p of correlation
+    
+#dropping values gives much more promising results in terms of probability p of correlation
 #can we predict life expectancy of a country by given data?
+    
 #Creating regression model for life expectancy
 from sklearn.model_selection import train_test_split 
 from sklearn.linear_model import LinearRegression
@@ -52,7 +52,8 @@ for x in df1.columns:
    
 X = df1[result].values
 y = df1['Life expectancy '].values
-
+#for i in range(50):
+    #, random_state=i*10)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.125, random_state=50)
 
 # build the model
@@ -65,6 +66,7 @@ y_pred = model.predict(X_test)
 
 #build a new data frame with two columns, the actual values of the test data, 
 #and the predictions of the model
+
 df1_compare = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 df1_head = df1_compare.head(7)
 print(df1_head)
@@ -81,7 +83,8 @@ def chart_regression(pred, y, sort=True):
     plt.ylabel('output')
     plt.legend()
     plt.show()
-    
+chart_regression(y_pred[:50].flatten(),y_test[:50],sort=True)
+chart_regression(y_pred[:100].flatten(),y_test[:100],sort=True)
 chart_regression(y_pred[:200].flatten(),y_test[:200],sort=True)   
 
 #second data frame
@@ -90,11 +93,11 @@ chart_regression(y_pred[:200].flatten(),y_test[:200],sort=True)
 #headers = list(df2.columns.values)
 #fields = []
 
-#using median value to fill NA  
+#using median value to fill NA fields 
 #for field in headers:
 #    med = df2[field].median()
 #    df2[field] = df2[field].fillna(med)
-#    print(f" has na? {pd.isnull(df[field]).values.any()}")
+#    print(f" #{field} has na? {pd.isnull(df[field]).values.any()}")
 #    fields.append({
 #        'name' : field,
 #        #'mean': df2[field].mean(),
