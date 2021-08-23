@@ -16,8 +16,9 @@ from sklearn import metrics
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Dropout
 from sklearn import preprocessing
+from sklearn.model_selection import KFold
 
 def encode_text_index(df, name):
     le = preprocessing.LabelEncoder()
@@ -60,11 +61,12 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.125, rando
 
 model = Sequential()
 model.add(Dense(40, input_dim=X.shape[1], activation='sigmoid')) # Hidden 1
-model.add(Dense(40, activation='sigmoid')) # Hidden 2
+model.add(Dropout(0.04))
+model.add(Dense(40, activation='relu')) # Hidden 2
 model.add(Dense(1)) # Output
 #model.summary() #note, only works if input shape specified, or Input layer given
 model.compile(loss='mean_squared_error', optimizer='adam')
-model.fit(X_train,y_train,verbose=2,epochs=70)
+model.fit(X_train,y_train,verbose=2,epochs=100)
 model.summary()
 pred = model.predict(X_test)
 print("Shape: {}".format(pred.shape))
