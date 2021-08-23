@@ -133,11 +133,6 @@ plt.xlabel("Life expectancy")
 plt.ylabel("Schooling")
 plt.show()
 
-plt.scatter('Life expectancy ', 'Adult Mortality', data = df1, color = "green", s=5)
-plt.xlabel("Life expectancy")
-plt.ylabel("Adult Mortality")
-plt.show()
-
 plt.scatter('Life expectancy ', ' HIV/AIDS', data = df1, color = "green", s=5)
 plt.xlabel("Life expectancy")
 plt.ylabel(" HIV/AIDS")
@@ -146,6 +141,15 @@ plt.show()
 plt.scatter('Life expectancy ', ' BMI ', data = df1, color = "green", s=5)
 plt.xlabel("Life expectancy")
 plt.ylabel("BMI")
+plt.show()
+
+#I decided that Adult Mortality is not biasing my model, however it doesn't provide any new information about the subject
+#Due to difference in corelation in developed and developing countries I'm not counting it as saying the same thing twice
+#however I decided not to count it as my top correlation.
+print("Presenting Adult Mortality correlation")
+plt.scatter('Life expectancy ', 'Adult Mortality', data = df1, color = "green", s=5)
+plt.xlabel("Life expectancy")
+plt.ylabel("Adult Mortality")
 plt.show()
 #Second data frame - dropping non numerical features
 
