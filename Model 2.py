@@ -37,6 +37,8 @@ def to_xy(df, target):
     # Regression
     return df[result].values.astype(np.float32), df[[target]].values.astype(np.float32)
 
+##############################################################################
+
 path = "."
 
 filename = os.path.join(path,"Life Expectancy Data.csv")    
@@ -54,14 +56,20 @@ for field in headers:
 #print(df.isnull().any())
 X,y = to_xy(df,"Life expectancy ")
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.125, random_state=0)
 
 model = Sequential()
-model.add(Dense(32, input_shape=X[1].shape, activation='sigmoid')) # Hidden 1
-model.add(Dense(32, input_shape=X[1].shape, activation='sigmoid')) # Hidden 2
+model.add(Dense(40, input_dim=X.shape[1], activation='sigmoid')) # Hidden 1
+model.add(Dense(40, activation='sigmoid')) # Hidden 2
 model.add(Dense(1)) # Output
 #model.summary() #note, only works if input shape specified, or Input layer given
 model.compile(loss='mean_squared_error', optimizer='adam')
-model.fit(X_train,y_train,verbose=2,epochs=100)
+model.fit(X_train,y_train,verbose=2,epochs=70)
 model.summary()
-#print(df)
+pred = model.predict(X_test)
+print("Shape: {}".format(pred.shape))
+print(pred[:10])
+score = np.sqrt(metrics.mean_squared_error(pred,y_test))
+print(f"Final score (RMSE): {score}")
+for i in range(10):
+    print(f"{i+1}. Life expectancy: {y[i]}, predicted Life expectancy: {pred[i]}")
