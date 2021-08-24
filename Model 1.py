@@ -22,8 +22,8 @@ df = pd.read_csv(filename_read, na_values=['NA', '?'])
 # as well as schooling value and GNI which from my understanding is correlated with GDP
 #it has been deleted to prevent bias in results
 df.drop('Income composition of resources', 1, inplace=True)
-#df.drop('Population', 1, inplace=True)
-#df.drop('Total expenditure', 1, inplace=True)
+df.drop('Population', 1, inplace=True)
+df.drop('Total expenditure', 1, inplace=True)
 
 #print(df1.isnull().any())
 
@@ -131,7 +131,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.125, rando
 model = LinearRegression()  
 model.fit(X_train, y_train)
         
-#    print(model.coef_)
+print(model.coef_)
 #        
 y_pred = model.predict(X_test)
 #        
@@ -139,10 +139,6 @@ y_pred = model.predict(X_test)
 #    #and the predictions of the model
 #        
 df1_compare = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
-#    #print first 10
-#    #df1_head = df1_compare.head(10)
-#    #print(df1_head)
-
        
 print('Mean:', np.mean(y_test))
 print('RMSE:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
