@@ -22,6 +22,7 @@ from sklearn import preprocessing
 from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import cross_val_score
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras import regularizers
 
 def encode_text_index(df, name):
     le = preprocessing.LabelEncoder()
@@ -53,25 +54,25 @@ df.drop('Country', 1, inplace=True)
 encode_text_index(df,'Status')
 
 headers = list(df.columns.values)
-
-for field in headers:
-    med = df[field].median()
-    df[field] = df[field].fillna(med)
+df = df.dropna()
+#for field in headers:
+#    med = df[field].median()
+#    df[field] = df[field].fillna(med)
 #print(df.isnull().any())
 X,y = to_xy(df,"Life expectancy ")
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.125, random_state=0)
 
 
-
 model = Sequential()
-model.add(Dense(40, input_dim=X.shape[1], activation='sigmoid')) # Hidden 1
-model.add(Dropout(0.04))
+model.add(Dense(40, input_dim=X.shape[1], activation='sigmoid',kernel_regularizer=regularizers.l2(0.01))) # Hidden 1
+model.add(Dropout(0.05))
+model.add(Dense(40, activation='sigmoid'))
 model.add(Dense(40, activation='relu')) # Hidden 2
 model.add(Dense(1)) # Output
 model.compile(loss='mean_squared_error', optimizer='adam')
-monitor = EarlyStopping(monitor='loss', patience=15,min_delta=0.1, mode='min')
-model.fit(X_train,y_train,verbose=2,epochs=100,callbacks=[monitor])
+monitor = EarlyStopping(monitor='loss', patience=5,min_delta=0.01, mode='min')
+model.fit(X_train,y_train,verbose=2,epochs=200,callbacks=[monitor])
 
 model.summary()
 
