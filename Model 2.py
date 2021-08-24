@@ -18,7 +18,10 @@ from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from sklearn import preprocessing
-from sklearn.model_selection import KFold
+
+from keras.wrappers.scikit_learn import KerasRegressor
+from sklearn.model_selection import cross_val_score
+from tensorflow.keras.callbacks import EarlyStopping
 
 def encode_text_index(df, name):
     le = preprocessing.LabelEncoder()
@@ -59,15 +62,19 @@ X,y = to_xy(df,"Life expectancy ")
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.125, random_state=0)
 
+
+
 model = Sequential()
 model.add(Dense(40, input_dim=X.shape[1], activation='sigmoid')) # Hidden 1
 model.add(Dropout(0.04))
 model.add(Dense(40, activation='relu')) # Hidden 2
 model.add(Dense(1)) # Output
-#model.summary() #note, only works if input shape specified, or Input layer given
 model.compile(loss='mean_squared_error', optimizer='adam')
-model.fit(X_train,y_train,verbose=2,epochs=100)
+monitor = EarlyStopping(monitor='loss', patience=15,min_delta=0.1, mode='min')
+model.fit(X_train,y_train,verbose=2,epochs=100,callbacks=[monitor])
+
 model.summary()
+
 pred = model.predict(X_test)
 print("Shape: {}".format(pred.shape))
 print(pred[:10])
