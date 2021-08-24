@@ -128,6 +128,29 @@ y = df1['Life expectancy '].values
 #    print(best_R2)
 ###############################################################################    
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.125, random_state=7840)
+model = LinearRegression()  
+model.fit(X_train, y_train)
+        
+#    print(model.coef_)
+#        
+y_pred = model.predict(X_test)
+#        
+#    #build a new data frame with two columns, the actual values of the test data, 
+#    #and the predictions of the model
+#        
+df1_compare = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+#    #print first 10
+#    #df1_head = df1_compare.head(10)
+#    #print(df1_head)
+
+       
+print('Mean:', np.mean(y_test))
+print('RMSE:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
+rpom=np.sqrt(metrics.mean_squared_error(y_test, y_pred))/np.mean(y_test)
+print("RSME percent of mean:",rpom)
+r2=sk.metrics.r2_score(y_test, y_pred)
+print("R^2",r2)
+
 df1_head = df1_compare.head(10)
 print(df1_head)
 
@@ -145,7 +168,6 @@ chart_regression(y_pred[:50].flatten(),y_test[:50],sort=True)
 chart_regression(y_pred[:100].flatten(),y_test[:100],sort=True)
 chart_regression(y_pred[:200].flatten(),y_test[:200],sort=True)   
 
-<<<<<<< HEAD
 
 print("Presenting of top 3 correlations")
 
@@ -174,8 +196,6 @@ plt.ylabel("Adult Mortality")
 plt.show()
 
 
-=======
->>>>>>> parent of 60c87f9... Update Model 1.py
 #Second data frame - dropping non numerical features
 
 #df2 = df.select_dtypes(include=['int', 'float'])
