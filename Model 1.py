@@ -15,7 +15,6 @@ import sklearn as sk
 path = "."
 filename_read = os.path.join(path, "Life Expectancy Data.csv")
 #check for empty fields
-
 df = pd.read_csv(filename_read, na_values=['NA', '?'])
 
 #Dropping of Human Development Index in terms of income composition of resources column
@@ -146,6 +145,7 @@ chart_regression(y_pred[:50].flatten(),y_test[:50],sort=True)
 chart_regression(y_pred[:100].flatten(),y_test[:100],sort=True)
 chart_regression(y_pred[:200].flatten(),y_test[:200],sort=True)   
 
+<<<<<<< HEAD
 
 print("Presenting of top 3 correlations")
 
@@ -174,6 +174,8 @@ plt.ylabel("Adult Mortality")
 plt.show()
 
 
+=======
+>>>>>>> parent of 60c87f9... Update Model 1.py
 #Second data frame - dropping non numerical features
 
 #df2 = df.select_dtypes(include=['int', 'float'])
