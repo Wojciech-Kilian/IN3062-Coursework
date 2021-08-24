@@ -27,7 +27,6 @@ df.drop('Total expenditure', 1, inplace=True)
 
 #print(df1.isnull().any())
 
-
 # First data frame - dropping non numerical features
 df1 = df.select_dtypes(include=['int', 'float'])
 
@@ -47,8 +46,6 @@ for field in headers:
     
 for field in fields:
     print(field)
-    
-
     
 #Can we predict life expectancy of a country by given data? :)
     
@@ -85,7 +82,6 @@ y = df1['Life expectancy '].values
 #best_ratio=100
 #best_R2=0
 #for i in range(5000):
-#, random_state=i*10)
 #    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.125, random_state=i*10)
 #    
 #    # build the model
@@ -132,12 +128,12 @@ model = LinearRegression()
 model.fit(X_train, y_train)
         
 print(model.coef_)
-#        
+        
 y_pred = model.predict(X_test)
-#        
-#    #build a new data frame with two columns, the actual values of the test data, 
-#    #and the predictions of the model
-#        
+        
+    #build a new data frame with two columns, the actual values of the test data, 
+    #and the predictions of the model
+        
 df1_compare = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
        
 print('Mean:', np.mean(y_test))
@@ -154,6 +150,7 @@ def chart_regression(pred, y, sort=True):
     t = pd.DataFrame({'pred': pred, 'y': y.flatten()})
     if sort:
         t.sort_values(by=['y'], inplace=True)
+    plt.figure(figsize=(10,10))
     plt.plot(t['y'].tolist(), label='expected')
     plt.plot(t['pred'].tolist(), label='prediction')
     plt.ylabel('output')
@@ -166,18 +163,20 @@ chart_regression(y_pred[:200].flatten(),y_test[:200],sort=True)
 
 
 print("Presenting of top 3 correlations")
-
+plt.figure(figsize=(10,10))
 plt.scatter('Life expectancy ', 'Schooling', data = df1, color = "green", s=5)
 plt.xlabel("Life expectancy")
 plt.ylabel("Schooling")
 plt.show()
-
-plt.scatter('Life expectancy ', ' HIV/AIDS', data = df1, color = "green", s=5)
+plt.figure(figsize=(10,10))
+plt.scatter('Life expectancy ', ' HIV/AIDS', data = df[df['Status'] == "Developing"], color = "green", s=5)
+plt.scatter('Life expectancy ', ' HIV/AIDS', data = df[df['Status'] == "Developed"], color = "blue", s=5)
 plt.xlabel("Life expectancy")
 plt.ylabel(" HIV/AIDS")
 plt.show()
-
-plt.scatter('Life expectancy ', ' BMI ', data = df1, color = "green", s=5)
+plt.figure(figsize=(10,10))
+plt.scatter('Life expectancy ', ' BMI ', data = df[df['Status'] == "Developing"], color = "green", s=5)
+plt.scatter('Life expectancy ', ' BMI ', data = df[df['Status'] == "Developed"], color = "blue", s=5)
 plt.xlabel("Life expectancy")
 plt.ylabel("BMI")
 plt.show()
@@ -186,6 +185,7 @@ plt.show()
 #Due to difference in corelation in developed and developing countries I'm not counting it as saying the same thing twice
 #however I decided not to count it as my top correlation.
 print("Presenting Adult Mortality correlation")
+plt.figure(figsize=(10,10))
 plt.scatter('Life expectancy ', 'Adult Mortality', data = df1, color = "green", s=5)
 plt.xlabel("Life expectancy")
 plt.ylabel("Adult Mortality")

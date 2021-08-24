@@ -18,6 +18,7 @@ from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from sklearn import preprocessing
+import matplotlib.pyplot as plt 
 
 from keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import cross_val_score
@@ -58,6 +59,7 @@ encode_text_index(df,'Status')
 
 headers = list(df.columns.values)
 df = df.dropna()
+#Dropping worked out better
 #for field in headers:
 #    med = df[field].median()
 #    df[field] = df[field].fillna(med)
@@ -75,7 +77,7 @@ model.add(Dense(40, activation='relu')) # Hidden 4
 model.add(Dense(1)) # Output
 model.compile(loss='mean_squared_error', optimizer='adam')
 monitor = EarlyStopping(monitor='loss', patience=5,min_delta=0.01, mode='min')
-model.fit(X_train,y_train,verbose=2,epochs=100,callbacks=[monitor])
+training_trace=model.fit(X_train,y_train,verbose=2,epochs=100,validation_split=0.25,callbacks=[monitor])
 
 model.summary()
 
@@ -88,3 +90,24 @@ score = np.sqrt(metrics.mean_squared_error(pred,y_test))
 print(f"Final score (RMSE): {score}")
 for i in range(10):
     print(f"{i+1}. Life expectancy: {y[i]}, predicted Life expectancy: {pred[i]}")
+    
+plt.figure(figsize=(10,10))
+plt.plot(training_trace.history['loss'])
+plt.plot(training_trace.history['val_loss'])
+plt.xlabel("epochs")
+plt.ylabel("loss")
+plt.show()
+
+def chart_regression(pred, y, sort=True):
+    t = pd.DataFrame({'pred': pred, 'y': y.flatten()})
+    if sort:
+        t.sort_values(by=['y'], inplace=True)
+    plt.figure(figsize=(10,10))
+    plt.plot(t['y'].tolist(), label='expected')
+    plt.plot(t['pred'].tolist(), label='prediction')
+    plt.ylabel('output')
+    plt.legend()
+    plt.show()
+
+chart_regression(pred[:50].flatten(),y_test[:50],sort=True)    
+chart_regression(pred[:100].flatten(),y_test[:100],sort=True)
